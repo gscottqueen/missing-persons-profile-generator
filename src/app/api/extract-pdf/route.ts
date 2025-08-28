@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     if (url.includes("/download.pdf")) {
       webUrl = url.replace("/download.pdf", "");
     }
-    
+
     // Validate URL is from FBI
     if (!webUrl.includes("fbi.gov/wanted")) {
       return NextResponse.json(
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     // Fetch the web page
     const response = await fetch(webUrl);
-    
+
     if (!response.ok) {
       return NextResponse.json(
         { error: `Failed to fetch webpage: ${response.statusText}` },
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Extract data from the wanted-person-wrapper
     const wantedPersonWrapper = $('.wanted-person-wrapper');
-    
+
     if (wantedPersonWrapper.length === 0) {
       return NextResponse.json(
         { error: "Could not find wanted person information on this page" },
@@ -52,7 +52,7 @@ export async function POST(request: NextRequest) {
     // Extract basic info
     const name = $('.documentFirstHeading').text().trim();
     const summary = $('.summary').text().trim();
-    
+
     // Extract description table data
     const description: Record<string, string> = {};
     $('.wanted-person-description table tr').each((_, row) => {
@@ -66,7 +66,7 @@ export async function POST(request: NextRequest) {
 
     // Extract images
     const images: string[] = [];
-    
+
     // Main mugshot
     const mugshot = $('.wanted-person-mug img').attr('src');
     if (mugshot) {
@@ -103,7 +103,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error("Web scraping error:", error);
     return NextResponse.json(
-      { 
+      {
         error: "Failed to extract information from webpage",
         details: error instanceof Error ? error.message : 'Unknown error'
       },

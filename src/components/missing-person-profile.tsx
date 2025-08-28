@@ -1,6 +1,10 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 interface MissingPersonData {
   firstName: string;
@@ -22,7 +26,50 @@ interface MissingPersonProfileProps {
   data: MissingPersonData;
 }
 
+interface GeneratedImage {
+  imageUrl: string;
+  yearsProgressed: number;
+  estimatedCurrentAge: string | number;
+}
+
 export default function MissingPersonProfile({ data }: MissingPersonProfileProps) {
+  const [generatedImage, setGeneratedImage] = useState<GeneratedImage | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState<string | null>(null);
+
+  const generateAgedImage = useCallback(async () => {
+    setIsGenerating(true);
+    setGenerateError(null);
+
+    try {
+      const response = await fetch('/api/generate-aged-image', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ personData: data }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to generate image');
+      }
+
+      const result = await response.json();
+      setGeneratedImage(result);
+    } catch (error) {
+      console.error('Error generating aged image:', error);
+      setGenerateError(error instanceof Error ? error.message : 'Unknown error occurred');
+    } finally {
+      setIsGenerating(false);
+    }
+  }, [data]);
+
+  // Auto-generate image when component mounts
+  useEffect(() => {
+    generateAgedImage();
+  }, [generateAgedImage]);
+
   const {
     firstName,
     lastName,
@@ -36,7 +83,6 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
     race,
     missingSince,
     image1,
-    image2,
   } = data;
 
   const details = [
@@ -98,17 +144,49 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
           </CardContent>
         </Card>
 
-        {/* Second Image */}
+        {/* Second Image - AI Generated Aged Progression */}
         <Card className="overflow-hidden">
+          <CardHeader className="pb-2">
+            <h3 className="text-lg font-semibold text-center">
+              AI Aged Progression
+              {generatedImage && (
+                <span className="text-sm font-normal text-gray-600 block">
+                  {generatedImage.yearsProgressed} years later
+                  {generatedImage.estimatedCurrentAge &&
+                   generatedImage.estimatedCurrentAge !== "unknown" &&
+                   generatedImage.estimatedCurrentAge !== null &&
+                    ` (Age ${generatedImage.estimatedCurrentAge})`
+                  }
+                </span>
+              )}
+            </h3>
+          </CardHeader>
           <CardContent className="p-0">
             <div className="aspect-[3/4] bg-gray-200 dark:bg-gray-800 flex items-center justify-center relative">
-              {image2 ? (
+              {isGenerating ? (
+                <div className="text-center space-y-3">
+                  <div className="w-16 h-16 mx-auto border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin"></div>
+                  <p className="text-sm text-gray-600">Generating aged progression...</p>
+                </div>
+              ) : generatedImage ? (
                 <Image
-                  src={image2}
-                  alt={`${firstName} ${lastName} - Photo 2`}
+                  src={generatedImage.imageUrl}
+                  alt={`${firstName} ${lastName} - AI Aged Progression`}
                   fill
                   className="object-cover"
                 />
+              ) : generateError ? (
+                <div className="text-center space-y-3 p-4">
+                  <div className="w-16 h-16 mx-auto bg-red-100 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-red-600">{generateError}</p>
+                  <Button size="sm" onClick={generateAgedImage} className="mt-2">
+                    Try Again
+                  </Button>
+                </div>
               ) : (
                 <div className="text-center space-y-2">
                   <div className="w-24 h-24 mx-auto bg-gray-300 dark:bg-gray-700 rounded-full flex items-center justify-center">
@@ -124,7 +202,10 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
                       />
                     </svg>
                   </div>
-                  <p className="text-sm text-gray-500">Photo 2</p>
+                  <p className="text-sm text-gray-500">AI Generated Image</p>
+                  <Button size="sm" onClick={generateAgedImage}>
+                    Generate Now
+                  </Button>
                 </div>
               )}
             </div>

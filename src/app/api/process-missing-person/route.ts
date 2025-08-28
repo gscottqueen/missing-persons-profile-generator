@@ -13,12 +13,12 @@ export async function POST(request: NextRequest) {
 
     // Convert scraped data to structured format
     const { name, summary, description, images } = scrapedData;
-    
+
     // Parse name
     const nameParts = name.split(' ');
     const firstName = nameParts[0] || '';
     const lastName = nameParts.slice(1).join(' ') || '';
-    
+
     // Parse summary for missing date and location
     const summaryLines = summary.split('\n').map((line: string) => line.trim()).filter(Boolean);
     const missingSince = summaryLines[0] || '';

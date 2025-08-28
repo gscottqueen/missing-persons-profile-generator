@@ -39,7 +39,7 @@ export default function Home() {
   };
 
   const [extractedData, setExtractedData] = useState<MissingPersonData | null>(null);
-  const [showSample, setShowSample] = useState(true);
+  const [showSample, setShowSample] = useState(false);
 
   const handleDataExtracted = (data: MissingPersonData) => {
     setExtractedData(data);
@@ -48,7 +48,6 @@ export default function Home() {
 
   const handleShowSample = () => {
     setShowSample(true);
-    setExtractedData(null);
   };
 
   return (
@@ -56,15 +55,15 @@ export default function Home() {
       <div className="container mx-auto px-4 space-y-8">
         {/* PDF Extractor Form */}
         <PdfExtractor onDataExtracted={handleDataExtracted} />
-        
+
         {/* Toggle buttons if we have extracted data */}
         {extractedData && (
           <div className="flex justify-center gap-4">
             <button
               onClick={() => setShowSample(false)}
               className={`px-4 py-2 rounded-md transition-colors ${
-                !showSample 
-                  ? "bg-blue-600 text-white" 
+                !showSample
+                  ? "bg-blue-600 text-white"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
@@ -73,8 +72,8 @@ export default function Home() {
             <button
               onClick={handleShowSample}
               className={`px-4 py-2 rounded-md transition-colors ${
-                showSample 
-                  ? "bg-blue-600 text-white" 
+                showSample
+                  ? "bg-blue-600 text-white"
                   : "bg-gray-200 text-gray-700 hover:bg-gray-300"
               }`}
             >
@@ -83,10 +82,12 @@ export default function Home() {
           </div>
         )}
 
-        {/* Missing Person Profile */}
-        <MissingPersonProfile 
-          data={showSample ? sampleData : (extractedData || sampleData)} 
-        />
+        {/* Missing Person Profile - Only render when we have data */}
+        {(extractedData || showSample) && (
+          <MissingPersonProfile
+            data={showSample ? sampleData : extractedData!}
+          />
+        )}
       </div>
     </div>
   );

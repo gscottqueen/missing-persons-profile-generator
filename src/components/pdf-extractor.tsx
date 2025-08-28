@@ -38,7 +38,7 @@ export default function PdfExtractor({ onDataExtracted }: PdfExtractorProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!url.trim()) {
       setError("Please enter a valid PDF URL");
       return;
