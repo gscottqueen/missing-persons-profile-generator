@@ -45,7 +45,7 @@ export default function ProfileExtractor({ onDataExtracted }: ProfileExtractorPr
 
     // Validate URL format
     if (!url.includes("fbi.gov/wanted")) {
-      setError("Please enter a valid FBI wanted page URL");
+      setError("Please enter a valid FBI missing persons page URL");
       return;
     }
 
@@ -119,21 +119,17 @@ export default function ProfileExtractor({ onDataExtracted }: ProfileExtractorPr
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-3">
               <Label htmlFor="profile-url" className="text-base font-medium text-slate-700 dark:text-slate-300">
-                FBI Wanted Page URL
+                FBI Missing Persons Page URL
               </Label>
               <Input
                 id="profile-url"
                 type="url"
-                placeholder="https://www.fbi.gov/wanted/kidnap/sarah-burton"
+                placeholder="https://www.fbi.gov/wanted/kidnap/jane-doe"
                 value={url}
                 onChange={(e) => setUrl(e.target.value)}
                 disabled={isLoading}
                 className="h-12 text-base border-slate-200 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500 bg-white dark:bg-slate-700"
               />
-              <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center gap-1">
-                <span className="text-blue-500">💡</span>
-                Example: https://www.fbi.gov/wanted/kidnap/sarah-burton
-              </p>
             </div>
 
             {error && (

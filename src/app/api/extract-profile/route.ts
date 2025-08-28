@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     // Validate URL is from FBI
     if (!webUrl.includes("fbi.gov/wanted")) {
       return NextResponse.json(
-        { error: "Invalid URL. Must be from FBI wanted page" },
+        { error: "Invalid URL. Must be from FBI missing persons page" },
         { status: 400 }
       );
     }

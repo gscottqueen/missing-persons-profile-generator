@@ -1,10 +1,10 @@
 # Missing Persons Image Generator
 
-This is a [Next.js](https://nextjs.org) application that allows users to extract and display missing person information from FBI wanted person pages with AI-powered aged progression image generation.
+This is a [Next.js](https://nextjs.org) application that allows users to extract and display missing person information from FBI missing persons pages with AI-powered aged progression image generation.
 
 ## Features
 
-- **Web Scraping**: Extract missing person data directly from FBI wanted person web pages
+- **Web Scraping**: Extract missing person data directly from FBI missing persons web pages
 - **AI-Powered Data Processing**: Parse and structure missing person details automatically
 - **Interactive Profile Display**: Beautiful, responsive profile cards using shadcn/ui components
 - **AI Aged Progression Images**: Generate realistic aged progression photos using OpenAI DALL-E
