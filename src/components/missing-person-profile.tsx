@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
 interface MissingPersonData {
@@ -134,6 +133,21 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header Section */}
       <div className="text-center space-y-4 p-8 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700">
+        {/* Alert Banner */}
+        <div className="bg-gradient-to-br from-red-600 to-red-700 dark:from-red-700 dark:to-red-800 text-white py-6 px-8 rounded-xl border border-red-500 dark:border-red-600">
+          <div className="max-w-2xl mx-auto text-center space-y-3">
+            <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 rounded-full mb-2">
+              <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+            <h2 className="text-2xl font-bold tracking-wide">MISSING PERSON</h2>
+            <p className="text-red-100 text-lg">
+              This person has been reported missing. Please review the information below carefully.
+            </p>
+          </div>
+        </div>
+
         <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
           {firstName} {lastName}
         </h1>
@@ -149,13 +163,6 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
             </div>
           )}
         </div>
-
-        <Badge variant="destructive" className="text-base px-6 py-2 bg-red-600 hover:bg-red-700 shadow-lg">
-          MISSING PERSON
-        </Badge>
-        <p className="text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
-          Please contact law enforcement immediately if you have any information about this missing person.
-        </p>
       </div>
 
       {/* Images Section */}

@@ -24,24 +24,6 @@ interface MissingPersonData {
 export default function Home() {
   const [extractedData, setExtractedData] = useState<MissingPersonData | null>(null);
 
-  // Sample data for testing
-  const sampleData: MissingPersonData = {
-    firstName: "Sarah",
-    lastName: "Johnson",
-    dateOfBirth: "February 22, 1990",
-    placeOfBirth: "Joplin, Missouri",
-    hair: "Light brown",
-    eyes: "Blue",
-    height: "5'7\"",
-    weight: "170 pounds",
-    sex: "Female",
-    race: "White",
-    missingSince: "March 19, 2004",
-    missingFrom: "Montgomery, Vermont",
-    image1: "/images/sbreport.webp",
-    image2: "/images/sbreport_aged.png",
-  };
-
   const handleDataExtracted = (data: MissingPersonData) => {
     setExtractedData(data);
   };
@@ -66,18 +48,6 @@ export default function Home() {
       <div className="container mx-auto px-4 py-12 space-y-8">
         {/* Profile Extractor Form */}
         <ProfileExtractor onDataExtracted={handleDataExtracted} />
-
-        {/* Test button for sample data */}
-        {!extractedData && (
-          <div className="text-center">
-            <button
-              onClick={() => setExtractedData(sampleData)}
-              className="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
-            >
-              Load Sample Data (for testing)
-            </button>
-          </div>
-        )}
 
         {/* Missing Person Profile - Only render when we have extracted data */}
         {extractedData && (
