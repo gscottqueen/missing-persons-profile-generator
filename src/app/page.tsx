@@ -22,34 +22,10 @@ interface MissingPersonData {
 }
 
 export default function Home() {
-  // Sample data based on your requirements
-  const sampleData: MissingPersonData = {
-    firstName: "Sarah",
-    lastName: "Johnson",
-    dateOfBirth: "February 22, 1990",
-    placeOfBirth: "Joplin, Missouri",
-    hair: "Light brown",
-    eyes: "Blue",
-    height: "5'7\" (at the time of her disappearance)",
-    weight: "170 pounds (at the time of her disappearance)",
-    sex: "Female",
-    race: "White",
-    missingSince: "March 19, 2004",
-    missingFrom: "Montgomery, Vermont",
-    image1: "/images/sbreport.webp",
-    image2: "/images/sbreport_aged.png",
-  };
-
   const [extractedData, setExtractedData] = useState<MissingPersonData | null>(null);
-  const [showSample, setShowSample] = useState(false);
 
   const handleDataExtracted = (data: MissingPersonData) => {
     setExtractedData(data);
-    setShowSample(false);
-  };
-
-  const handleShowSample = () => {
-    setShowSample(true);
   };
 
   return (
@@ -73,37 +49,9 @@ export default function Home() {
         {/* Profile Extractor Form */}
         <ProfileExtractor onDataExtracted={handleDataExtracted} />
 
-        {/* Toggle buttons if we have extracted data */}
+        {/* Missing Person Profile - Only render when we have extracted data */}
         {extractedData && (
-          <div className="flex justify-center gap-3">
-            <button
-              onClick={() => setShowSample(false)}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                !showSample
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25 hover:bg-blue-700"
-                  : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700"
-              }`}
-            >
-              Show Extracted Data
-            </button>
-            <button
-              onClick={handleShowSample}
-              className={`px-6 py-3 rounded-lg font-medium transition-all duration-200 ${
-                showSample
-                  ? "bg-blue-600 text-white shadow-lg shadow-blue-600/25 hover:bg-blue-700"
-                  : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 dark:bg-slate-800 dark:text-slate-300 dark:border-slate-600 dark:hover:bg-slate-700"
-              }`}
-            >
-              Show Sample Data
-            </button>
-          </div>
-        )}
-
-        {/* Missing Person Profile - Only render when we have data */}
-        {(extractedData || showSample) && (
-          <MissingPersonProfile
-            data={showSample ? sampleData : extractedData!}
-          />
+          <MissingPersonProfile data={extractedData} />
         )}
       </div>
     </div>
