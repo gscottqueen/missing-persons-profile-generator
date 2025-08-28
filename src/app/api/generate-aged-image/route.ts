@@ -37,9 +37,12 @@ export async function POST(request: NextRequest) {
     // Look for common date patterns and extract just the date part
     let missingSinceDate = missingSince;
     const datePatterns = [
-      /^[A-Za-z]+ \d{1,2}, \d{4}/,  // "December 12, 2022"
-      /^\d{1,2}\/\d{1,2}\/\d{4}/,   // "12/12/2022"
-      /^\d{4}-\d{1,2}-\d{1,2}/      // "2022-12-12"
+      /^[A-Za-z]+ \d{1,2}, \d{4}/,        // "December 12, 2022"
+      /^[A-Za-z]+ of \d{4}/,              // "June of 2017"
+      /^[A-Za-z]+ \d{4}/,                 // "June 2017"
+      /^\d{1,2}\/\d{1,2}\/\d{4}/,         // "12/12/2022"
+      /^\d{4}-\d{1,2}-\d{1,2}/,           // "2022-12-12"
+      /^\d{4}/                            // "2017" (year only)
     ];
 
     for (const pattern of datePatterns) {
@@ -55,7 +58,33 @@ export async function POST(request: NextRequest) {
 
     const missingDate = new Date(missingSinceDate);
     const currentDate = new Date();
-    const yearsPassedSinceMissing = Math.floor((currentDate.getTime() - missingDate.getTime()) / (1000 * 60 * 60 * 24 * 365.25));
+
+    console.log("Parsed missing date object:", missingDate);
+    console.log("Current date object:", currentDate);
+    console.log("Missing date valid?", !isNaN(missingDate.getTime()));
+    console.log("Missing date timestamp:", missingDate.getTime());
+    console.log("Current date timestamp:", currentDate.getTime());
+
+    const timeDifference = currentDate.getTime() - missingDate.getTime();
+    console.log("Time difference in milliseconds:", timeDifference);
+
+    const yearsPassedSinceMissing = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 365.25));
+
+    console.log("Years passed since missing:", yearsPassedSinceMissing);
+
+    // Validation - ensure we have a reasonable result
+    if (isNaN(yearsPassedSinceMissing) || yearsPassedSinceMissing < 0 || yearsPassedSinceMissing > 100) {
+      console.error("Invalid years calculation:", {
+        missingSince,
+        missingSinceDate,
+        missingDate,
+        yearsPassedSinceMissing
+      });
+      return NextResponse.json(
+        { error: "Unable to calculate years since missing - invalid date format" },
+        { status: 400 }
+      );
+    }
 
     // Calculate current age if we have birth date
     let estimatedCurrentAge: string | number = "unknown";
@@ -81,8 +110,10 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    console.log(yearsPassedSinceMissing)
+
     // Create detailed prompt for age progression with reference to uploaded image
-    const prompt = `Create a new photorealistic portrait of the same individual, age +${yearsPassedSinceMissing} years. The image should be photo realistic and keep the same personality and facial structure. Create a hyper-realistic portrait that maintains their core identity while showing natural aging progression.`;
+    const prompt = `Create a new photorealistic portrait of the same individual, age +${yearsPassedSinceMissing} years. The image should be photo realistic and keep the same personality and facial structure. Do not over age or under age them. Create a hyper-realistic portrait that maintains their core identity while showing natural aging progression.`;
 
     // Convert image URL to proper format for OpenAI API
     let imageFile: File;

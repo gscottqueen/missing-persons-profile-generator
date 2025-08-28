@@ -86,6 +86,28 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
     image1,
   } = data;
 
+  // Parse missing since field to separate date and location
+  const parseMissingSinceData = () => {
+    if (!missingSince) return { date: '', location: '' };
+
+    // Look for common date patterns followed by location
+    const dateLocationMatch = missingSince.match(/^(.+?)([A-Z][a-z]+(?:,\s*[A-Z][a-z]+)*(?:,\s*[A-Z]{2})?)$/);
+
+    if (dateLocationMatch) {
+      const [, datePart, locationPart] = dateLocationMatch;
+      return {
+        date: datePart.trim(),
+        location: locationPart.trim()
+      };
+    }
+
+    // If no clear pattern is found, return the original as date
+    return { date: missingSince, location: '' };
+  };
+
+  const { date: parsedDate, location: parsedLocation } = parseMissingSinceData();
+  const displayMissingFrom = missingFrom || parsedLocation;
+
   const details = [
     { label: "Date(s) of Birth Used", value: dateOfBirth },
     { label: "Place of Birth", value: placeOfBirth },
@@ -107,10 +129,12 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
       // Parse the date of birth (format: "February 22, 1990")
       const birthDate = new Date(dateOfBirth);
 
-      // Parse the missing since date (format: "March 19, 2004")
-      const missingDate = new Date(missingSince);
+      // Use the parsed date instead of the raw missingSince field
+      const missingDateString = parsedDate || missingSince;
+      const missingDate = new Date(missingDateString);
 
       if (isNaN(birthDate.getTime()) || isNaN(missingDate.getTime())) {
+        console.log('Invalid dates:', { dateOfBirth, missingDateString, birthDate, missingDate });
         return null;
       }
 
@@ -121,8 +145,10 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
         age--;
       }
 
+      console.log('Age calculation:', { dateOfBirth, missingDateString, age });
       return age;
-    } catch {
+    } catch (error) {
+      console.error('Error calculating age:', error);
       return null;
     }
   };
@@ -135,7 +161,7 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
       <div className="text-center space-y-4 p-8 bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200 dark:border-slate-700">
         {/* Alert Banner */}
         <div className="bg-gradient-to-br from-red-600 to-red-700 dark:from-red-700 dark:to-red-800 text-white py-6 px-8 rounded-xl border border-red-500 dark:border-red-600">
-          <div className="max-w-2xl mx-auto text-center space-y-3">
+          <div className="max-w-3xl mx-auto text-center space-y-3">
             <div className="inline-flex items-center justify-center w-12 h-12 bg-white/20 rounded-full mb-2">
               <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
@@ -152,17 +178,17 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
           {firstName} {lastName}
         </h1>
 
-        {/* Missing Information */}
-        <div className="space-y-2">
-          <div className="text-lg font-semibold text-slate-700 dark:text-slate-300">
-            Missing Since: <span className="text-slate-900 dark:text-white">{missingSince}</span>
-          </div>
-          {missingFrom && (
-            <div className="text-lg font-semibold text-slate-700 dark:text-slate-300">
-              Missing From: <span className="text-slate-900 dark:text-white">{missingFrom}</span>
-            </div>
-          )}
+        {/* Missing Since Information */}
+        <div className="text-lg font-semibold text-slate-700 dark:text-slate-300">
+          Missing Since: <span className="text-slate-900 dark:text-white">{parsedDate || missingSince}</span>
         </div>
+
+        {/* Missing From Information */}
+        {displayMissingFrom && (
+          <div className="text-lg font-semibold text-slate-700 dark:text-slate-300">
+            Missing From: <span className="text-slate-900 dark:text-white">{displayMissingFrom}</span>
+          </div>
+        )}
       </div>
 
       {/* Images Section */}
