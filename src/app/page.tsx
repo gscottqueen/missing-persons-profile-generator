@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import MissingPersonProfile from "@/components/missing-person-profile";
-import PdfExtractor from "@/components/pdf-extractor";
+import ProfileExtractor from "@/components/profile-extractor";
 
 interface MissingPersonData {
   firstName: string;
@@ -53,8 +53,8 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 py-8">
       <div className="container mx-auto px-4 space-y-8">
-        {/* PDF Extractor Form */}
-        <PdfExtractor onDataExtracted={handleDataExtracted} />
+        {/* Profile Extractor Form */}
+        <ProfileExtractor onDataExtracted={handleDataExtracted} />
 
         {/* Toggle buttons if we have extracted data */}
         {extractedData && (
