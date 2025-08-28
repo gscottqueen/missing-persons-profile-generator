@@ -96,8 +96,6 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
     { label: "Weight", value: weight },
     { label: "Sex", value: sex },
     { label: "Race", value: race },
-    { label: "Missing Since", value: missingSince },
-    ...(missingFrom ? [{ label: "Missing From", value: missingFrom }] : []),
   ];
 
   return (
@@ -107,6 +105,19 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
         <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
           {firstName} {lastName}
         </h1>
+        
+        {/* Missing Information */}
+        <div className="space-y-2">
+          <div className="text-lg font-semibold text-slate-700 dark:text-slate-300">
+            Missing Since: <span className="text-slate-900 dark:text-white">{missingSince}</span>
+          </div>
+          {missingFrom && (
+            <div className="text-lg font-semibold text-slate-700 dark:text-slate-300">
+              Missing From: <span className="text-slate-900 dark:text-white">{missingFrom}</span>
+            </div>
+          )}
+        </div>
+        
         <Badge variant="destructive" className="text-base px-6 py-2 bg-red-600 hover:bg-red-700 shadow-lg">
           MISSING PERSON
         </Badge>

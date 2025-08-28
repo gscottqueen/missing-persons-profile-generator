@@ -5,7 +5,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, FileText, AlertCircle } from "lucide-react";
 
@@ -33,7 +32,6 @@ interface ProfileExtractorProps {
 export default function ProfileExtractor({ onDataExtracted }: ProfileExtractorProps) {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [extractedText, setExtractedText] = useState("");
   const [error, setError] = useState("");
   const [step, setStep] = useState<"input" | "processing" | "extracted">("input");
 
@@ -71,7 +69,6 @@ export default function ProfileExtractor({ onDataExtracted }: ProfileExtractorPr
       }
 
       const scrapedData = await response.json();
-      setExtractedText(`Scraped data from: ${scrapedData.name}\nSummary: ${scrapedData.summary}`);
 
       // Step 2: Process scraped data into structured format
       const aiResponse = await fetch("/api/process-missing-person", {
@@ -100,7 +97,6 @@ export default function ProfileExtractor({ onDataExtracted }: ProfileExtractorPr
 
   const handleReset = () => {
     setUrl("");
-    setExtractedText("");
     setError("");
     setStep("input");
   };
@@ -199,20 +195,6 @@ export default function ProfileExtractor({ onDataExtracted }: ProfileExtractorPr
                 Extract Another Page
               </Button>
             </div>
-
-            {extractedText && (
-              <div className="space-y-3">
-                <Label htmlFor="extracted-text" className="text-base font-medium text-slate-700 dark:text-slate-300">
-                  Extracted Content (Preview)
-                </Label>
-                <Textarea
-                  id="extracted-text"
-                  value={extractedText.substring(0, 500) + (extractedText.length > 500 ? "..." : "")}
-                  readOnly
-                  className="min-h-[120px] text-sm bg-slate-50 dark:bg-slate-700 border-slate-200 dark:border-slate-600"
-                />
-              </div>
-            )}
 
             <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
               <p className="text-slate-700 dark:text-slate-300">
