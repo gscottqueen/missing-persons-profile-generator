@@ -21,8 +21,30 @@ export async function POST(request: NextRequest) {
 
     // Parse summary for missing date and location
     const summaryLines = summary.split('\n').map((line: string) => line.trim()).filter(Boolean);
-    const missingSince = summaryLines[0] || '';
+    const missingSinceRaw = summaryLines[0] || '';
     const lastSeenLocation = summaryLines[1] || '';
+
+    // Attempt to separate date from location if they're combined
+    let missingSince = '';
+    let missingFrom = '';
+
+    // Look for patterns like "March 19, 2004Montgomery, Vermont" or "March 19, 2004 Montgomery, Vermont"
+    // Try to match date patterns followed by location
+    const dateLocationMatch = missingSinceRaw.match(/^([A-Za-z]+ \d{1,2}, \d{4})\s*(.*)$/);
+    
+    if (dateLocationMatch) {
+      missingSince = dateLocationMatch[1].trim();
+      missingFrom = dateLocationMatch[2].trim();
+    } else {
+      // If no pattern match, use the raw data
+      missingSince = missingSinceRaw;
+      missingFrom = lastSeenLocation;
+    }
+
+    // Remove missingFrom if it's empty or just whitespace
+    if (!missingFrom || missingFrom.trim() === '') {
+      missingFrom = lastSeenLocation;
+    }
 
     // Map description table to our format
     const structuredData = {
@@ -37,6 +59,7 @@ export async function POST(request: NextRequest) {
       sex: description["Sex"] || '',
       race: description["Race"] || '',
       missingSince,
+      missingFrom: missingFrom || undefined,
       image1: images[0] || '',
       image2: images[1] || '',
     };
