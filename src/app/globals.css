@@ -125,25 +125,25 @@
   .backdrop-blur-sm {
     backdrop-filter: blur(4px);
   }
-  
+
   .shadow-xl {
     box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   }
-  
+
   .shadow-blue-600\/25 {
     box-shadow: 0 4px 6px -1px rgb(37 99 235 / 0.25), 0 2px 4px -2px rgb(37 99 235 / 0.25);
   }
-  
+
   .transition-all {
     transition-property: all;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 150ms;
   }
-  
+
   .duration-200 {
     transition-duration: 200ms;
   }
-  
+
   .duration-300 {
     transition-duration: 300ms;
   }

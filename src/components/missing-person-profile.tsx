@@ -98,6 +98,34 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
     { label: "Race", value: race },
   ];
 
+  // Calculate age at time of disappearance
+  const calculateAgeAtDisappearance = () => {
+    try {
+      // Parse the date of birth (format: "February 22, 1990")
+      const birthDate = new Date(dateOfBirth);
+
+      // Parse the missing since date (format: "March 19, 2004")
+      const missingDate = new Date(missingSince);
+
+      if (isNaN(birthDate.getTime()) || isNaN(missingDate.getTime())) {
+        return null;
+      }
+
+      let age = missingDate.getFullYear() - birthDate.getFullYear();
+      const monthDiff = missingDate.getMonth() - birthDate.getMonth();
+
+      if (monthDiff < 0 || (monthDiff === 0 && missingDate.getDate() < birthDate.getDate())) {
+        age--;
+      }
+
+      return age;
+    } catch {
+      return null;
+    }
+  };
+
+  const ageAtDisappearance = calculateAgeAtDisappearance();
+
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header Section */}
@@ -105,7 +133,7 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
         <h1 className="text-4xl font-bold text-slate-900 dark:text-white">
           {firstName} {lastName}
         </h1>
-        
+
         {/* Missing Information */}
         <div className="space-y-2">
           <div className="text-lg font-semibold text-slate-700 dark:text-slate-300">
@@ -117,7 +145,7 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
             </div>
           )}
         </div>
-        
+
         <Badge variant="destructive" className="text-base px-6 py-2 bg-red-600 hover:bg-red-700 shadow-lg">
           MISSING PERSON
         </Badge>
@@ -134,6 +162,11 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
             <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
               Original Photo
             </h3>
+            {ageAtDisappearance !== null && (
+              <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                Age {ageAtDisappearance} at time of disappearance
+              </p>
+            )}
           </CardHeader>
           <CardContent className="p-0">
             <div className="aspect-[3/4] bg-slate-100 dark:bg-slate-700 flex items-center justify-center relative overflow-hidden">
@@ -225,8 +258,8 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
                     </svg>
                   </div>
                   <p className="text-slate-500 dark:text-slate-400 mb-3">Generate AI aged progression</p>
-                  <Button 
-                    size="sm" 
+                  <Button
+                    size="sm"
                     onClick={generateAgedImage}
                     className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25"
                   >

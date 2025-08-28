@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     // Look for patterns like "March 19, 2004Montgomery, Vermont" or "March 19, 2004 Montgomery, Vermont"
     // Try to match date patterns followed by location
     const dateLocationMatch = missingSinceRaw.match(/^([A-Za-z]+ \d{1,2}, \d{4})\s*(.*)$/);
-    
+
     if (dateLocationMatch) {
       missingSince = dateLocationMatch[1].trim();
       missingFrom = dateLocationMatch[2].trim();
