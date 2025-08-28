@@ -98,6 +98,10 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
     { label: "Race", value: race },
   ];
 
+  // Debug: Log the data to see what we're working with
+  console.log('Missing Person Data:', data);
+  console.log('Details array:', details);
+
   // Calculate age at time of disappearance
   const calculateAgeAtDisappearance = () => {
     try {
@@ -290,7 +294,7 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
                   {detail.label}:
                 </span>
                 <span className="text-slate-900 dark:text-white sm:text-right font-medium">
-                  {detail.value}
+                  {detail.value || "Not available"}
                 </span>
               </div>
             ))}
