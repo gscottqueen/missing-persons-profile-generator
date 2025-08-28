@@ -6,7 +6,7 @@ export default function Home() {
     firstName: "Sarah",
     lastName: "Johnson",
     dateOfBirth: "February 22, 1990",
-    placeOfBirth: "Joplin, Missouri", 
+    placeOfBirth: "Joplin, Missouri",
     hair: "Light brown",
     eyes: "Blue",
     height: "5'7\" (at the time of her disappearance)",
@@ -14,8 +14,8 @@ export default function Home() {
     sex: "Female",
     race: "White",
     missingSince: "July 16, 2018",
-    // image1: "/path/to/image1.jpg", // Uncomment and add real image paths
-    // image2: "/path/to/image2.jpg", // Uncomment and add real image paths
+    image1: "/images/sbreport.webp",
+    image2: "/images/sbreport_aged.png",
   };
 
   return (
