@@ -111,7 +111,7 @@ export default function ProfileExtractor({ onDataExtracted }: ProfileExtractorPr
           Data Extraction
         </CardTitle>
         <p className="text-slate-600 dark:text-slate-300 max-w-md mx-auto leading-relaxed">
-          Enter an FBI missing person webpage URL to automatically extract and populate the profile data
+          Enter an <a href="https://www.fbi.gov/wanted/kidnap" className="text-blue-600 dark:text-blue-400 underline hover:text-blue-700 dark:hover:text-blue-300" target="_blank" rel="noopener noreferrer">FBI missing person webpage</a> URL to automatically extract and populate the profile data
         </p>
       </CardHeader>
       <CardContent className="space-y-6 px-8 pb-8">
