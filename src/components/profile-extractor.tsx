@@ -27,9 +27,10 @@ interface MissingPersonData {
 
 interface ProfileExtractorProps {
   onDataExtracted: (data: MissingPersonData) => void;
+  onReset?: () => void;
 }
 
-export default function ProfileExtractor({ onDataExtracted }: ProfileExtractorProps) {
+export default function ProfileExtractor({ onDataExtracted, onReset }: ProfileExtractorProps) {
   const [url, setUrl] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -99,6 +100,10 @@ export default function ProfileExtractor({ onDataExtracted }: ProfileExtractorPr
     setUrl("");
     setError("");
     setStep("input");
+    // Call the parent's reset function to clear extracted data
+    if (onReset) {
+      onReset();
+    }
   };
 
   return (

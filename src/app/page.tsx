@@ -28,6 +28,10 @@ export default function Home() {
     setExtractedData(data);
   };
 
+  const handleReset = () => {
+    setExtractedData(null);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Header Section */}
@@ -47,7 +51,7 @@ export default function Home() {
       {/* Main Content */}
       <div className="container mx-auto px-4 py-12 space-y-8">
         {/* Profile Extractor Form */}
-        <ProfileExtractor onDataExtracted={handleDataExtracted} />
+        <ProfileExtractor onDataExtracted={handleDataExtracted} onReset={handleReset} />
 
         {/* Missing Person Profile - Only render when we have extracted data */}
         {extractedData && (
