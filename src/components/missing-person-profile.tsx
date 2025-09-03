@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { printMissingPersonFlyer } from "@/components/missing-person-print";
 
 interface MissingPersonData {
   firstName: string;
@@ -155,6 +156,17 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
 
   const ageAtDisappearance = calculateAgeAtDisappearance();
 
+  const handlePrint = () => {
+    printMissingPersonFlyer({
+      data,
+      generatedImage,
+      ageAtDisappearance,
+      parsedDate,
+      displayMissingFrom,
+      details
+    });
+  };
+
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       {/* Header Section */}
@@ -189,6 +201,19 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
             Missing From: <span className="text-slate-900 dark:text-white">{displayMissingFrom}</span>
           </div>
         )}
+
+        {/* Print Button */}
+        <div className="pt-4">
+          <Button
+            onClick={handlePrint}
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 shadow-lg shadow-blue-600/25"
+          >
+            <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+              <path fillRule="evenodd" d="M5 4v3H4a2 2 0 00-2 2v3a2 2 0 002 2h1v2a2 2 0 002 2h6a2 2 0 002-2v-2h1a2 2 0 002-2V9a2 2 0 00-2-2h-1V4a2 2 0 00-2-2H7a2 2 0 00-2 2zm8 0H7v3h6V4zM5 14H4v-3h1v3zm1 0v2h8v-2H6zm0-1h8v-3H6v3z" clipRule="evenodd" />
+            </svg>
+            Print Missing Person Flyer
+          </Button>
+        </div>
       </div>
 
       {/* Images Section */}
