@@ -188,13 +188,15 @@ export default function ProfileExtractor({ onDataExtracted, onReset }: ProfileEx
 
         {step === "extracted" && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-              <Badge variant="default" className="bg-green-500 hover:bg-green-600 text-white px-3 py-1">
-                ✓ Data Extracted Successfully
-              </Badge>
-              <Button variant="outline" onClick={handleReset} className="border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/20">
-                Extract Another Page
-              </Button>
+            <div className="p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+              <div className="flex flex-col gap-3 w-full">
+                <Badge variant="default" className="bg-green-500 hover:bg-green-600 text-white px-3 py-1 w-full text-center">
+                  ✓ Data Extracted Successfully
+                </Badge>
+                <Button variant="outline" onClick={handleReset} className="border-green-200 text-green-700 hover:bg-green-50 dark:border-green-800 dark:text-green-300 dark:hover:bg-green-900/20 w-full">
+                  Extract Another Page
+                </Button>
+              </div>
             </div>
 
             <div className="text-center p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
