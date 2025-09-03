@@ -37,10 +37,12 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
   const [generatedImage, setGeneratedImage] = useState<GeneratedImage | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generateError, setGenerateError] = useState<string | null>(null);
+  const [fundingMessage, setFundingMessage] = useState<string | null>(null);
 
   const generateAgedImage = useCallback(async () => {
     setIsGenerating(true);
     setGenerateError(null);
+    setFundingMessage(null);
 
     try {
       const response = await fetch('/api/generate-aged-image', {
@@ -60,7 +62,16 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
       setGeneratedImage(result);
     } catch (error) {
       console.error('Error generating aged image:', error);
-      setGenerateError(error instanceof Error ? error.message : 'Unknown error occurred');
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+
+      // Check if error is related to token exhaustion or quota limits
+      const isTokenError = /quota|token|insufficient|limit|exceeded/i.test(errorMessage);
+
+      if (isTokenError) {
+        setFundingMessage("We are looking for additional funding to expand how many generative AI images we can provide each day. If you find this application is valuable and are interested in donating please send an email with your contact information and details of what you would like to contribute");
+      } else {
+        setGenerateError(errorMessage);
+      }
     } finally {
       setIsGenerating(false);
     }
@@ -300,7 +311,40 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
                     </svg>
                   </div>
                   <p className="text-sm text-red-600 dark:text-red-400">{generateError}</p>
-                  <Button size="sm" onClick={generateAgedImage} className="bg-red-600 hover:bg-red-700 text-white">
+                  <Button size="sm" onClick={() => generateAgedImage()} className="bg-red-600 hover:bg-red-700 text-white">
+                    Try Again
+                  </Button>
+                </div>
+              ) : fundingMessage ? (
+                <div className="text-center space-y-4 p-8">
+                  <div className="w-16 h-16 mx-auto bg-yellow-100 dark:bg-yellow-900/50 rounded-full flex items-center justify-center">
+                    <svg className="w-8 h-8 text-yellow-600" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  <p className="text-sm text-yellow-700 dark:text-yellow-300 mb-4">{fundingMessage}</p>
+                  <Button
+                    size="sm"
+                    onClick={() => {
+                      const subject = encodeURIComponent("Donation Inquiry for Missing Persons Profile Generator");
+                      const body = encodeURIComponent(`Hi,
+
+I found your application valuable and am interested in donating. Please provide more information about how I can contribute.
+
+Contact Information:
+Name:
+Email:
+Phone:
+
+Donation Details:`);
+                      const mailtoLink = `mailto:missing-persons-profile-generator.skiing593@simplelogin.com?subject=${subject}&body=${body}`;
+                      window.open(mailtoLink, '_blank');
+                    }}
+                    className="bg-blue-600 hover:bg-blue-700 text-white mr-2"
+                  >
+                    Send Email
+                  </Button>
+                  <Button size="sm" onClick={() => generateAgedImage()} className="bg-gray-600 hover:bg-gray-700 text-white">
                     Try Again
                   </Button>
                 </div>
@@ -322,7 +366,7 @@ export default function MissingPersonProfile({ data }: MissingPersonProfileProps
                   <p className="text-slate-500 dark:text-slate-400 mb-3">Generate AI aged progression</p>
                   <Button
                     size="sm"
-                    onClick={generateAgedImage}
+                    onClick={() => generateAgedImage()}
                     className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-600/25"
                   >
                     Generate Now
