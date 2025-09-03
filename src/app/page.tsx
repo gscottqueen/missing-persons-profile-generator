@@ -35,7 +35,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
       {/* Header Section */}
-      <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-700 shadow-sm">
+      <div className="">
         <div className="container mx-auto px-4 py-6">
           <div className="text-center">
             <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">
